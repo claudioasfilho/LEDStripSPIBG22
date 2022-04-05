@@ -46,7 +46,7 @@ SL_WEAK void app_init(void)
 
   initLedStrip();
 
-  PopulateBufferAndSend();
+  SetLedStriptoRGB(0xf,0xff,0xff);
 
   //test.fullbyte = 2;
 

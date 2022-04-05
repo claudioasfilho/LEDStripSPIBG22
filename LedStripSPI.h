@@ -53,8 +53,6 @@ enum LogicState
  *****************************************************************************/
 void initLedStrip(void);
 
-void PopulateBufferAndSend(void);
-
-void NumbertoColor(uint8_t _Red,uint8_t _Green,uint8_t _Blue, uint8_t *ColorArray);
+void SetLedStriptoRGB(uint8_t _Red,uint8_t _Green,uint8_t _Blue);
 
 #endif // LEDSTRIPSPI_H
