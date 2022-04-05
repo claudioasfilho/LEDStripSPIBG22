@@ -57,9 +57,7 @@
 LDMA_Descriptor_t ldmaTXDescriptor;
 LDMA_TransferCfg_t ldmaTXConfig;
 
-// LDMA descriptor and transfer configuration structures for USART RX channel
-LDMA_Descriptor_t ldmaRXDescriptor;
-LDMA_TransferCfg_t ldmaRXConfig;
+
 
 // Size of the data buffers
 //#define BUFLEN  24+100
@@ -179,39 +177,24 @@ void initLdma(void)
   // Transfer a byte on free space in the USART buffer
   ldmaTXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART1_TXBL);
 
-  // Source is USART1_RXDATA, destination is inbuf, and length if BUFLEN
-  ldmaRXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_P2M_BYTE(&(USART1->RXDATA), inbuf, BUFLEN);
-  ldmaRXDescriptor.xfer.blockSize = ldmaCtrlBlockSizeUnit3;
-
-//   Transfer a byte on receive data valid
-  ldmaRXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART1_RXDATAV);
 }
 
-/**************************************************************************//**
- * @brief LDMA IRQHandler
- *****************************************************************************/
-void LDMA_IRQHandler()
-{
-  uint32_t flags = LDMA_IntGet();
-
-  // Clear the transmit channel's done flag if set
-  if (flags & (1 << TX_LDMA_CHANNEL))
-    LDMA_IntClear(1 << TX_LDMA_CHANNEL);
-
-  /*
-   * Clear the receive channel's done flag if set and change receive
-   * state to done.
-   */
-  if (flags & (1 << RX_LDMA_CHANNEL))
-  {
-    LDMA_IntClear(1 << RX_LDMA_CHANNEL);
-    rx_done = true;
-  }
-
-  // Stop in case there was an error
-  if (flags & LDMA_IF_ERROR)
-    __BKPT(0);
-}
+///**************************************************************************//**
+// * @brief LDMA IRQHandler
+// *****************************************************************************/
+//void LDMA_IRQHandler()
+//{
+//  uint32_t flags = LDMA_IntGet();
+//
+//  // Clear the transmit channel's done flag if set
+//  if (flags & (1 << TX_LDMA_CHANNEL))
+//    LDMA_IntClear(1 << TX_LDMA_CHANNEL);
+//
+//
+//  // Stop in case there was an error
+//  if (flags & LDMA_IF_ERROR)
+//    __BKPT(0);
+//}
 
 
 void populateMessageBuffer(void)
@@ -227,7 +210,7 @@ void populateMessageBuffer(void)
   for (LedCounter=0; LedCounter<NUMBEROFLEDS;LedCounter++)
 
     {
-      memcpy(outbuf+offset, ColorBlue, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
+      memcpy(outbuf+offset, ColorRed, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
       offset+=ONE_LED_BUFFER_SIZE;
     }
 
@@ -253,11 +236,11 @@ void PopulateBufferAndSend(void)
     rx_done = false;
 
     // Start both channels
-    LDMA_StartTransfer(RX_LDMA_CHANNEL, &ldmaRXConfig, &ldmaRXDescriptor);
+//    LDMA_StartTransfer(RX_LDMA_CHANNEL, &ldmaRXConfig, &ldmaRXDescriptor);
     LDMA_StartTransfer(TX_LDMA_CHANNEL, &ldmaTXConfig, &ldmaTXDescriptor);
 
-    // Wait in EM1 until all data is received
-    while (!rx_done);
+//    // Wait in EM1 until all data is received
+//    while (!rx_done);
 
 }
 
