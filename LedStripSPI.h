@@ -4,24 +4,26 @@
 
 
 // Ports and pins for SPI interface
-#define US0MISO_PORT  gpioPortA
-#define US0MISO_PIN   5
-#define US0MOSI_PORT  gpioPortA
-#define US0MOSI_PIN   6
-#define US0CLK_PORT   gpioPortD
-#define US0CLK_PIN    2
-#define US0CS_PORT    gpioPortC
-#define US0CS_PIN     1
+#define US1MISO_PORT  gpioPortA
+#define US1MISO_PIN   5
+#define US1MOSI_PORT  gpioPortA
+#define US1MOSI_PIN   6
+#define US1CLK_PORT   gpioPortD
+#define US1CLK_PIN    2
+#define US1CS_PORT    gpioPortC
+#define US1CS_PIN     1
 
 // LDMA channel for receive and transmit servicing
-#define RX_LDMA_CHANNEL 0
-#define TX_LDMA_CHANNEL 1
+#define RX_LDMA_CHANNEL 6
+#define TX_LDMA_CHANNEL 5
 
 #define ONE_LED_BUFFER_SIZE 24
 #define RESET_LOGIC_BUFFER_SIZE 100//40//51//67
-#define NUMBEROFLEDS 6
+#define NUMBEROFLEDS 4
 
 #define BUFLEN  (NUMBEROFLEDS*ONE_LED_BUFFER_SIZE)+RESET_LOGIC_BUFFER_SIZE
+
+
 
 enum LogicState
     {

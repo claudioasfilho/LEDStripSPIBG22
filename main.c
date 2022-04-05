@@ -39,13 +39,14 @@
 #include "sl_system_process_action.h"
 #endif // SL_CATALOG_KERNEL_PRESENT
 #include "LedStripSPI.h"
+#include "em_chip.h"
 
 int main(void)
 {
   // Initialize Silicon Labs device, system, service(s) and protocol stack(s).
   // Note that if the kernel is present, processing task(s) will be created by
   // this call.
-  sl_system_init();
+  CHIP_Init();
 
   initLedStrip();
 
@@ -53,6 +54,9 @@ int main(void)
 
 
   while(1);
+
+  sl_system_init();
+
   // Initialize the application. For example, create periodic timer(s) or
   // task(s) if the kernel is present.
   app_init();

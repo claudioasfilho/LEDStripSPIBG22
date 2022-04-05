@@ -74,7 +74,10 @@ main.o: ../main.c \
  /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_bus.h \
  /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_core.h \
  /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/service/system/inc/sl_system_process_action.h \
- ../LedStripSPI.h
+ ../LedStripSPI.h \
+ /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_chip.h \
+ /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_system.h \
+ /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_gpio.h
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/common/toolchain/inc/sl_gcc_preinclude.h:
 /Users/clfilho/SimplicityStudio/v5_workspace/LEDStripSPIBG22/autogen/sl_component_catalog.h:
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/service/system/inc/sl_system_init.h:
@@ -151,3 +154,6 @@ main.o: ../main.c \
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_core.h:
 /Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/service/system/inc/sl_system_process_action.h:
 ../LedStripSPI.h:
+/Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_chip.h:
+/Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_system.h:
+/Users/clfilho/SimplicityStudio/SDKs/gecko_sdk2//platform/emlib/inc/em_gpio.h:

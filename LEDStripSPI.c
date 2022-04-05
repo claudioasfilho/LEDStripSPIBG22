@@ -106,26 +106,26 @@ void initGpio(void)
   CMU_ClockEnable(cmuClock_GPIO, true);
 
   // Configure RX pin as an input
-  GPIO_PinModeSet(US0MISO_PORT, US0MISO_PIN, gpioModeInput, 0);
+  GPIO_PinModeSet(US1MISO_PORT, US1MISO_PIN, gpioModeInput, 0);
 
   // Configure TX pin as an output
-  GPIO_PinModeSet(US0MOSI_PORT, US0MOSI_PIN, gpioModePushPull, 0);
+  GPIO_PinModeSet(US1MOSI_PORT, US1MOSI_PIN, gpioModePushPull, 0);
 
   // Configure CLK pin as an output low (CPOL = 0)
-  GPIO_PinModeSet(US0CLK_PORT, US0CLK_PIN, gpioModePushPull, 0);
+  GPIO_PinModeSet(US1CLK_PORT, US1CLK_PIN, gpioModePushPull, 0);
 
   // Configure CS pin as an output and drive inactive high
-  GPIO_PinModeSet(US0CS_PORT, US0CS_PIN, gpioModePushPull, 1);
+  GPIO_PinModeSet(US1CS_PORT, US1CS_PIN, gpioModePushPull, 1);
 }
 
 /**************************************************************************//**
  * @brief
- *    USART0 initialization
+ *    USART1 initialization
  *****************************************************************************/
-void initUsart0(void)
+void initUsart1(void)
 {
   // Enable clock (not needed on xG21)
-  CMU_ClockEnable(cmuClock_USART0, true);
+  CMU_ClockEnable(cmuClock_USART1, true);
 
   // Default asynchronous initializer (master mode, 1 Mbps, 8-bit data)
   USART_InitSync_TypeDef init = USART_INITSYNC_DEFAULT;
@@ -139,27 +139,27 @@ void initUsart0(void)
   //init.autoCsHold = 4;        // Insert 7 bit times of CS hold delay
 
   /*
-   * Route USART0 RX, TX, and CLK to the specified pins.  Note that CS is
-   * not controlled by USART0 so there is no write to the corresponding
+   * Route USART1 RX, TX, and CLK to the specified pins.  Note that CS is
+   * not controlled by USART1 so there is no write to the corresponding
    * USARTROUTE register to do this.
    */
-  GPIO->USARTROUTE[0].RXROUTE = (US0MISO_PORT << _GPIO_USART_RXROUTE_PORT_SHIFT)
-      | (US0MISO_PIN << _GPIO_USART_RXROUTE_PIN_SHIFT);
-  GPIO->USARTROUTE[0].TXROUTE = (US0MOSI_PORT << _GPIO_USART_TXROUTE_PORT_SHIFT)
-      | (US0MOSI_PIN << _GPIO_USART_TXROUTE_PIN_SHIFT);
-  GPIO->USARTROUTE[0].CLKROUTE = (US0CLK_PORT << _GPIO_USART_CLKROUTE_PORT_SHIFT)
-      | (US0CLK_PIN << _GPIO_USART_CLKROUTE_PIN_SHIFT);
-  GPIO->USARTROUTE[0].CSROUTE = (US0CS_PORT << _GPIO_USART_CSROUTE_PORT_SHIFT)
-      | (US0CS_PIN << _GPIO_USART_CSROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[1].RXROUTE = (US1MISO_PORT << _GPIO_USART_RXROUTE_PORT_SHIFT)
+      | (US1MISO_PIN << _GPIO_USART_RXROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[1].TXROUTE = (US1MOSI_PORT << _GPIO_USART_TXROUTE_PORT_SHIFT)
+      | (US1MOSI_PIN << _GPIO_USART_TXROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[1].CLKROUTE = (US1CLK_PORT << _GPIO_USART_CLKROUTE_PORT_SHIFT)
+      | (US1CLK_PIN << _GPIO_USART_CLKROUTE_PIN_SHIFT);
+  GPIO->USARTROUTE[1].CSROUTE = (US1CS_PORT << _GPIO_USART_CSROUTE_PORT_SHIFT)
+      | (US1CS_PIN << _GPIO_USART_CSROUTE_PIN_SHIFT);
 
   // Enable USART interface pins
-  GPIO->USARTROUTE[0].ROUTEEN = GPIO_USART_ROUTEEN_RXPEN |    // MISO
+  GPIO->USARTROUTE[1].ROUTEEN = GPIO_USART_ROUTEEN_RXPEN |    // MISO
                                 GPIO_USART_ROUTEEN_TXPEN |    // MOSI
                                 GPIO_USART_ROUTEEN_CLKPEN |
                                 GPIO_USART_ROUTEEN_CSPEN;
 
-  // Configure and enable USART0
-  USART_InitSync(USART0, &init);
+  // Configure and enable USART1
+  USART_InitSync(USART1, &init);
 }
 
 /**************************************************************************//**
@@ -172,19 +172,19 @@ void initLdma(void)
   LDMA_Init_t ldmaInit = LDMA_INIT_DEFAULT;
   LDMA_Init(&ldmaInit);
 
-  // Source is outbuf, destination is USART0_TXDATA, and length if BUFLEN
-  ldmaTXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_M2P_BYTE(outbuf, &(USART0->TXDATA), BUFLEN);
+  // Source is outbuf, destination is USART1_TXDATA, and length if BUFLEN
+  ldmaTXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_M2P_BYTE(outbuf, &(USART1->TXDATA), BUFLEN);
   ldmaTXDescriptor.xfer.blockSize = ldmaCtrlBlockSizeUnit3;
 
   // Transfer a byte on free space in the USART buffer
-  ldmaTXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART0_TXBL);
+  ldmaTXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART1_TXBL);
 
-  // Source is USART0_RXDATA, destination is inbuf, and length if BUFLEN
-  ldmaRXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_P2M_BYTE(&(USART0->RXDATA), inbuf, BUFLEN);
+  // Source is USART1_RXDATA, destination is inbuf, and length if BUFLEN
+  ldmaRXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_P2M_BYTE(&(USART1->RXDATA), inbuf, BUFLEN);
   ldmaRXDescriptor.xfer.blockSize = ldmaCtrlBlockSizeUnit3;
 
 //   Transfer a byte on receive data valid
-  ldmaRXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART0_RXDATAV);
+  ldmaRXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART1_RXDATAV);
 }
 
 /**************************************************************************//**
@@ -227,7 +227,7 @@ void populateMessageBuffer(void)
   for (LedCounter=0; LedCounter<NUMBEROFLEDS;LedCounter++)
 
     {
-      memcpy(outbuf+offset, ColorRed, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
+      memcpy(outbuf+offset, ColorBlue, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
       offset+=ONE_LED_BUFFER_SIZE;
     }
 
@@ -239,9 +239,9 @@ void initLedStrip(void)
 {
   CMU_HFRCODPLLBandSet(cmuHFRCODPLLFreq_80M0Hz);
 
-  // Initialize GPIO and USART0
+  // Initialize GPIO and USART1
   initGpio();
-  initUsart0();
+  initUsart1();
   initLdma();
 }
 

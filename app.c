@@ -43,8 +43,10 @@ static uint8_t advertising_set_handle = 0xff;
 SL_WEAK void app_init(void)
 {
 
-  initLedStrip();
-  PopulateBufferAndSend();
+//  initLedStrip();
+//  PopulateBufferAndSend();
+//
+//  while(1);
 
 }
 
