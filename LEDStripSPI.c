@@ -73,6 +73,7 @@ uint8_t inbuf[BUFLEN];
 // Data reception complete
 bool rx_done;
 
+//Led Logic - GRB - 8 bits for each color
 
 
 static const uint8_t ColorGreen[ONE_LED_BUFFER_SIZE] =
@@ -88,6 +89,10 @@ static const uint8_t ColorBlue[ONE_LED_BUFFER_SIZE] =
 
 static const uint8_t ColorWhite[ONE_LED_BUFFER_SIZE] =
     {LOGIC_1, LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1, LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1, LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1,LOGIC_1};
+
+
+uint8_t CustomColor[ONE_LED_BUFFER_SIZE] =
+    {LOGIC_0, LOGIC_0,LOGIC_0,LOGIC_0,LOGIC_0,LOGIC_0,LOGIC_0,LOGIC_1,LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0, LOGIC_0};
 
 uint8_t LogicReset[RESET_LOGIC_BUFFER_SIZE];
 
@@ -179,22 +184,102 @@ void initLdma(void)
 
 }
 
-///**************************************************************************//**
-// * @brief LDMA IRQHandler
-// *****************************************************************************/
-//void LDMA_IRQHandler()
-//{
-//  uint32_t flags = LDMA_IntGet();
-//
-//  // Clear the transmit channel's done flag if set
-//  if (flags & (1 << TX_LDMA_CHANNEL))
-//    LDMA_IntClear(1 << TX_LDMA_CHANNEL);
-//
-//
-//  // Stop in case there was an error
-//  if (flags & LDMA_IF_ERROR)
-//    __BKPT(0);
-//}
+
+
+void NumbertoColor(uint8_t _Red,uint8_t _Green,uint8_t _Blue, uint8_t *ColorArray)
+{
+  Bits_t Red,Green,Blue;
+
+  Green.fullbyte = _Green;
+  Red.fullbyte = _Red;
+  Blue.fullbyte = _Blue;
+
+  //Set the Green Tone
+
+    if (Green.bits._b7 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b6 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b5 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b4 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b3 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b2 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b1 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Green.bits._b0 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+
+    //Set the Red Tone
+
+    if (Red.bits._b7 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b6 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b5 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b4 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b3 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b2 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b1 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Red.bits._b0 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+
+    //Set the Blue Tone
+
+    if (Blue.bits._b7 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b6 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b5 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b4 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b3 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b2 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b1 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+    if (Blue.bits._b0 ==1) *ColorArray = LOGIC_1;
+    else *ColorArray = LOGIC_0;
+    ColorArray++;
+
+
+
+
+}
+
 
 
 void populateMessageBuffer(void)
@@ -210,7 +295,7 @@ void populateMessageBuffer(void)
   for (LedCounter=0; LedCounter<NUMBEROFLEDS;LedCounter++)
 
     {
-      memcpy(outbuf+offset, ColorRed, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
+      memcpy(outbuf+offset, CustomColor, ONE_LED_BUFFER_SIZE * sizeof(uint8_t));
       offset+=ONE_LED_BUFFER_SIZE;
     }
 
@@ -230,6 +315,8 @@ void initLedStrip(void)
 
 void PopulateBufferAndSend(void)
 {
+
+  NumbertoColor(0, 0,0xff,&CustomColor);
 
     populateMessageBuffer();
   // Set the receive state to not done

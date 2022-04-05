@@ -36,7 +36,8 @@
 
 // The advertising set handle allocated from Bluetooth stack.
 static uint8_t advertising_set_handle = 0xff;
-
+//extern uint8_t CustomColor[];
+volatile Bits_t test;
 /**************************************************************************//**
  * Application Init.
  *****************************************************************************/
@@ -44,7 +45,10 @@ SL_WEAK void app_init(void)
 {
 
   initLedStrip();
+
   PopulateBufferAndSend();
+
+  //test.fullbyte = 2;
 
 //  while(1);
 

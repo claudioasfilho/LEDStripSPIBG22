@@ -19,10 +19,25 @@
 
 #define ONE_LED_BUFFER_SIZE 24
 #define RESET_LOGIC_BUFFER_SIZE 100//40//51//67
-#define NUMBEROFLEDS 4
+#define NUMBEROFLEDS 6
 
 #define BUFLEN  (NUMBEROFLEDS*ONE_LED_BUFFER_SIZE)+RESET_LOGIC_BUFFER_SIZE
 
+typedef union {
+
+  struct{
+    uint8_t _b0:1;
+    uint8_t _b1:1;
+    uint8_t _b2:1;
+    uint8_t _b3:1;
+    uint8_t _b4:1;
+    uint8_t _b5:1;
+    uint8_t _b6:1;
+    uint8_t _b7:1;
+  }bits;
+
+  uint8_t fullbyte;
+}Bits_t;
 
 
 enum LogicState
@@ -39,9 +54,7 @@ enum LogicState
 void initLedStrip(void);
 
 void PopulateBufferAndSend(void);
-/**************************************************************************//**
- * Application Process Action.
- *****************************************************************************/
-void app_process_action(void);
+
+void NumbertoColor(uint8_t _Red,uint8_t _Green,uint8_t _Blue, uint8_t *ColorArray);
 
 #endif // LEDSTRIPSPI_H
