@@ -173,14 +173,17 @@ void initLdma(void)
 {
   // First, initialize the LDMA unit itself
   LDMA_Init_t ldmaInit = LDMA_INIT_DEFAULT;
+  ldmaInit.ldmaInitIrqPriority = 3;
   LDMA_Init(&ldmaInit);
 
   // Source is outbuf, destination is USART1_TXDATA, and length if BUFLEN
   ldmaTXDescriptor = (LDMA_Descriptor_t)LDMA_DESCRIPTOR_SINGLE_M2P_BYTE(outbuf, &(USART1->TXDATA), BUFLEN);
   ldmaTXDescriptor.xfer.blockSize = ldmaCtrlBlockSizeUnit3;
 
+
   // Transfer a byte on free space in the USART buffer
   ldmaTXConfig = (LDMA_TransferCfg_t)LDMA_TRANSFER_CFG_PERIPHERAL(ldmaPeripheralSignal_USART1_TXBL);
+
 
 }
 
@@ -323,6 +326,27 @@ void SetLedStriptoRGB(uint8_t _Red,uint8_t _Green,uint8_t _Blue)
     LDMA_StartTransfer(TX_LDMA_CHANNEL, &ldmaTXConfig, &ldmaTXDescriptor);
 
 
+}
+
+/**************************************************************************//**
+ * @brief LDMA IRQHandler
+ *****************************************************************************/
+void LDMA_IRQHandler()
+{
+  uint32_t flags = LDMA_IntGet();
+
+
+
+  // Clear the transmit channel's done flag if set
+  if (flags & (1 << TX_LDMA_CHANNEL)){
+    LDMA_IntClear(1 << TX_LDMA_CHANNEL);
+    // tx done
+  }
+
+  // Stop in case there was an error
+  if (flags & LDMA_IF_ERROR){
+    __BKPT(0);
+  }
 }
 
 

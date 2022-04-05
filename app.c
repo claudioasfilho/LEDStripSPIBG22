@@ -46,7 +46,11 @@ SL_WEAK void app_init(void)
 
   initLedStrip();
 
-  SetLedStriptoRGB(0xf,0xff,0xff);
+  SetLedStriptoRGB(0,0xff,0);
+
+ // while(LDMA_TransferRemainingCount()>0);
+
+//  LDMA_DeInit();
 
   //test.fullbyte = 2;
 
@@ -128,11 +132,15 @@ void sl_bt_on_event(sl_bt_msg_t *evt)
     // -------------------------------
     // This event indicates that a new connection was opened.
     case sl_bt_evt_connection_opened_id:
+
+      SetLedStriptoRGB(0xff,0,0);
       break;
 
     // -------------------------------
     // This event indicates that a connection was closed.
     case sl_bt_evt_connection_closed_id:
+
+      SetLedStriptoRGB(0,0,0);
       // Restart advertising after client has disconnected.
       sc = sl_bt_advertiser_start(
         advertising_set_handle,

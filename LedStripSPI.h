@@ -14,12 +14,11 @@
 #define US1CS_PIN     1
 
 // LDMA channel for receive and transmit servicing
-#define RX_LDMA_CHANNEL 6
-#define TX_LDMA_CHANNEL 5
+#define TX_LDMA_CHANNEL 4
 
 #define ONE_LED_BUFFER_SIZE 24
 #define RESET_LOGIC_BUFFER_SIZE 100//40//51//67
-#define NUMBEROFLEDS 6
+#define NUMBEROFLEDS 5
 
 #define BUFLEN  (NUMBEROFLEDS*ONE_LED_BUFFER_SIZE)+RESET_LOGIC_BUFFER_SIZE
 
